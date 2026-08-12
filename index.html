@@ -7,16 +7,18 @@
 </head>
 
 <body>
-  <p>네이버 앱으로 이동 중입니다.</p>
-
-  <a id="openNaver" href="#">네이버 앱에서 열기</a>
+  <p id="message">이동 중입니다.</p>
+  <a id="openNaver" href="#" style="display:none;">네이버 앱에서 열기</a>
 
   <script>
-    const webUrl =
-      "https://smartstore.naver.com/0sugarmart";
+    const webUrl = "https://smartstore.naver.com/0sugarmart";
+    const encodedUrl = encodeURIComponent(webUrl);
 
-    const encodedUrl =
-      encodeURIComponent(webUrl);
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
+    const isIOS =
+      /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
     const naverScheme =
       "naversearchapp://inappbrowser?url=" +
@@ -36,19 +38,25 @@
       encodeURIComponent(webUrl) +
       ";end";
 
-    const isAndroid =
-      /Android/i.test(navigator.userAgent);
+    const button = document.getElementById("openNaver");
+    const message = document.getElementById("message");
 
-    const destination =
-      isAndroid ? androidIntent : naverScheme;
+    if (isAndroid) {
+      message.textContent = "네이버 앱으로 이동 중입니다.";
+      button.href = androidIntent;
+      button.style.display = "inline";
+      window.location.href = androidIntent;
 
-    document.getElementById("openNaver").href = destination;
+    } else if (isIOS) {
+      message.textContent = "네이버 앱으로 이동 중입니다.";
+      button.href = naverScheme;
+      button.style.display = "inline";
+      window.location.href = naverScheme;
 
-    // 페이지가 열리면 우선 자동으로 네이버 앱 호출 시도
-    window.location.href = destination;
-
-    // 자동 호출이 차단된 환경에서는
-    // 사용자가 위 버튼을 한 번 누르면 됨.
+    } else {
+      // Windows / Mac / Linux 등 PC
+      window.location.replace(webUrl);
+    }
   </script>
 </body>
 </html>
