@@ -7,14 +7,20 @@
 </head>
 
 <body>
-  <p>네이버 앱으로 이동 중입니다.</p>
-  <a id="openNaver" href="#">네이버 앱에서 열기</a>
+  <p id="message">이동 중입니다.</p>
+  <a id="openNaver" href="#" style="display:none;">네이버 앱에서 열기</a>
 
   <script>
     const webUrl =
       "https://smartstore.naver.com/0sugarmart/products/13319012102";
 
     const encodedUrl = encodeURIComponent(webUrl);
+
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
+    const isIOS =
+      /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
     const naverScheme =
       "naversearchapp://inappbrowser?url=" +
@@ -34,11 +40,25 @@
       encodeURIComponent(webUrl) +
       ";end";
 
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    const destination = isAndroid ? androidIntent : naverScheme;
+    const button = document.getElementById("openNaver");
+    const message = document.getElementById("message");
 
-    document.getElementById("openNaver").href = destination;
-    window.location.href = destination;
+    if (isAndroid) {
+      message.textContent = "네이버 앱으로 이동 중입니다.";
+      button.href = androidIntent;
+      button.style.display = "inline";
+      window.location.href = androidIntent;
+
+    } else if (isIOS) {
+      message.textContent = "네이버 앱으로 이동 중입니다.";
+      button.href = naverScheme;
+      button.style.display = "inline";
+      window.location.href = naverScheme;
+
+    } else {
+      // PC / Mac / Linux
+      window.location.replace(webUrl);
+    }
   </script>
 </body>
 </html>
