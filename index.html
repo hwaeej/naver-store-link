@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>제로슈거마트</title>
+</head>
+
+<body>
+  <p>네이버 앱으로 이동 중입니다.</p>
+
+  <a id="openNaver" href="#">네이버 앱에서 열기</a>
+
+  <script>
+    const webUrl =
+      "https://smartstore.naver.com/0sugarmart";
+
+    const encodedUrl =
+      encodeURIComponent(webUrl);
+
+    const naverScheme =
+      "naversearchapp://inappbrowser?url=" +
+      encodedUrl +
+      "&target=new&version=6";
+
+    const androidIntent =
+      "intent://inappbrowser?url=" +
+      encodedUrl +
+      "&target=new&version=6" +
+      "#Intent;" +
+      "scheme=naversearchapp;" +
+      "action=android.intent.action.VIEW;" +
+      "category=android.intent.category.BROWSABLE;" +
+      "package=com.nhn.android.search;" +
+      "S.browser_fallback_url=" +
+      encodeURIComponent(webUrl) +
+      ";end";
+
+    const isAndroid =
+      /Android/i.test(navigator.userAgent);
+
+    const destination =
+      isAndroid ? androidIntent : naverScheme;
+
+    document.getElementById("openNaver").href = destination;
+
+    // 페이지가 열리면 우선 자동으로 네이버 앱 호출 시도
+    window.location.href = destination;
+
+    // 자동 호출이 차단된 환경에서는
+    // 사용자가 위 버튼을 한 번 누르면 됨.
+  </script>
+</body>
+</html>
